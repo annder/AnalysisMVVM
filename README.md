@@ -26,7 +26,33 @@ Fork for [moon](https://github.com/kbrsh/moon)
                 children:[]
             })
         }
+        return index;
     }
 ```
 
 这个作者非常鸡贼地在下面添加了`children`这个选项，于是每次处理物料的时候，就传入到里面去。
+
+解析Attribute是这样解析的：
+
+```js
+    while( index < length) {
+        // First 
+        char = input[index];
+        if (char == "\\" || char == ">") {
+            break;
+        };
+        // Pause cycle, and index value automatic add 1. 
+        if (char == "=") {
+            index += 1;
+        // And why it is break this fragment code black, but why utilize continue keyword to skip   tokens?
+            break;
+        }
+        else {
+            // Store char and ....?
+            key += char;
+            index += 1;
+        }
+    }
+```
+
+<!-- Let us reproduce it again -->

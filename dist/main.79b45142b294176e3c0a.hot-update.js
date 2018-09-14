@@ -1,0 +1,1 @@
+webpackHotUpdate("main",{"./src/index.js":function(module,exports){eval('console.log("w")\n\n//# sourceURL=webpack:///./src/index.js?')}});

@@ -12,5 +12,21 @@ Fork for [moon](https://github.com/kbrsh/moon)
 例如函数：
 
 ```js
-
+    export const parseText = (index,input,length,stack) => {
+        if (...) {
+            stack[stack.length - 1].chidren.push({
+                type:"Text",
+                attribute:[{
+                    key:"",
+                    //Strip content symbols.
+                    value:content.replace(eascapRE,(match) => easpaMap[math]),
+                    expression:false,
+                    dynamic:false
+                }],
+                children:[]
+            })
+        }
+    }
 ```
+
+这个作者非常鸡贼地在下面添加了`children`这个选项，于是每次处理物料的时候，就传入到里面去。

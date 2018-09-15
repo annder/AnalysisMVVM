@@ -4,6 +4,9 @@ import {
 import {
     isComponentType
 } from "./../util";
+import {
+    error
+} from "./../../util/util"
 
 const whitespaceRE = /^\s+$/;
 const valueEndRE = /[\s/>]/;
@@ -139,8 +142,27 @@ export const parseOpeningTag = (index, input, length, stack) => {
             index += 1;
         }
     }
+    return index;
 }
 //
 export const parseClosingTag = (index, input, length, stack) => {
-
+    let type = "";
+    for (; index < length; index++) {
+        const char = input[index];
+        /* 
+            parse for instance 
+        */
+        if (char == ">") {
+            index += 1;
+            break;
+        } else {
+            type += char;
+        }
+    }
+    const lastElement = stack.pop();
+    // ??
+    if (type !== lastElement.type && process.env.MOON_ENV === "development") {
+        error(`Unclosed tag "${lastElement.type}"`)
+    }
+    return index;
 }

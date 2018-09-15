@@ -56,3 +56,60 @@ Fork for [moon](https://github.com/kbrsh/moon)
 ```
 
 <!-- Let us reproduce it again -->
+
+作者写了三种解析`Tag`的方式，分别是：
+
+1. 解析属性
+2. 解析开合标签
+3. 解析闭合标签
+
+其中解析属性的是按照是否有`<`、`\`、`{`、`=`这三样标签来解析的。
+
+然后判断是否为表达式，也就是说通过`Tempalte`的解析的判断有`$`符号。
+
+然后将属性全部`push`到`stack`里面去，代码为：
+
+```js
+    if (expression) {
+        let dynamic = parseTemplate(value);
+        // !important
+        value = template.expression;
+        dynamic = template.dynamic;
+    }
+    attributes.push({
+        key:key,
+        value:value,
+        expression:expression,
+        dynamic:dynamic
+    })
+```
+
+还有就是开合标签和闭合标签的解析是一毛一样，但是吧，开和标签处要判断是否为`component`。
+
+也就是说开头要判断是否为`component`，代码如下：
+
+```js
+    const isComponent = (type) => {
+        if (type[0].toUppcase() != type[1].toLowwerCase()) {
+            return true;
+        }
+        return false;
+    }
+```
+
+如果是`Component`的话，就是将它解析一次，然后在推到`stack.children`中就行了。
+
+
+闭标签的话，有一个判断。指的是如果解析的值没有和最后一个闭合标签的话，就是出错。
+
+举一个例子：
+
+```js
+    // template <p> </p
+    /* 
+        stack.type = "span"
+        type == "p";
+        
+    */
+   throw new Error("value")
+```

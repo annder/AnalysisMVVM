@@ -1,6 +1,9 @@
 import {
     parseTemplate
 } from "./template";
+import {
+    isComponentType
+} from "./../util";
 
 const whitespaceRE = /^\s+$/;
 const valueEndRE = /[\s/>]/;
@@ -75,7 +78,7 @@ export const parseAttributes = (index, input, length, attributes) => {
             }
             let dynamic = false;
             if (expression) {
-                const dynamic = parseTemplate(value);
+                let dynamic = parseTemplate(value);
                 value = template.expression;
                 dynamic = template.dynamic;
             }
@@ -88,4 +91,56 @@ export const parseAttributes = (index, input, length, attributes) => {
         }
     }
     return index;
+}
+
+export const parseOpeningTag = (index, input, length, stack) => {
+    let element = {
+        type: "",
+        attributes: [],
+        children: []
+    };
+    while (index < length) {
+        const char = input[index];
+        if (char === "/" || char === ">") {
+            const attributes = element.attributes;
+            const latestIndex = stack.length - 1;
+            if (char === "/") {
+                index += 1;
+            } else {
+                stack.push(element);
+            }
+            for (let i = 0; i < attributes.length;) {
+                const attribute = attributes[i];
+                /* Self-ref */
+                if (isComponentType(attribute.key)) {
+                    element = {
+                        type: attribute.key,
+                        attributes: [{
+                            key: "",
+                            value: attribute.value,
+                            expression: attribute.expression,
+                            dynamic: attribute.dynamic
+                        }],
+                        children: [element]
+                    };
+                    attribute.splite(i, 1)
+                } else {
+                    i += 1;
+                }
+            }
+            // Push component into children stack. 
+            stack[latestIndex].children.push(element);
+            index += 1;
+            break;
+        } else if ((whitespaceRE.test(char) && (index += 1)) || char == "=") {
+            index = parseAttributes(index, input, length, element.attributes);
+        } else {
+            element.type += char;
+            index += 1;
+        }
+    }
+}
+//
+export const parseClosingTag = (index, input, length, stack) => {
+
 }

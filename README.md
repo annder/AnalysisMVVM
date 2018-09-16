@@ -11,6 +11,18 @@ Fork for [moon](https://github.com/kbrsh/moon)
 
 例如函数：
 
+Notes:
+
+> Creating a Tree node should needs array.
+> stack ---> 
+>       type ---> 
+>              attribute --->
+>              \ key
+>              \ value
+>              \ expression
+>              \ dynamic
+
+
 ```js
     export const parseText = (index,input,length,stack) => {
         if (...) {
@@ -111,5 +123,6 @@ Fork for [moon](https://github.com/kbrsh/moon)
         type == "p";
         
     */
-   throw new Error("value")
+   throw new Error("value");
 ```
+ 

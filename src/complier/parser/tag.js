@@ -19,7 +19,7 @@ export const parseAttributes = (index, input, length, attributes) => {
     while (index < length) {
         let char = input[index];
         if (char == "/" || char == ">") {
-            break;
+            break;  
             //If state is whitespace, then jump over 
             /* 
             But, The motherfucker in the life that is but!

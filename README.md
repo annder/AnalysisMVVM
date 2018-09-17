@@ -126,3 +126,17 @@ Notes:
    throw new Error("value");
 ```
  
+
+> !import
+
+如何解析`Node`在文档树中呢，代码如下：
+
+1. 找到子节点.
+2. 循环找出相应的节点，技术用法是`siblings.indexOf(element)`
+
+```js
+    const siblings = parent.children;
+    for(let i = siblings.indexOf(element); i < siblings.length; i++) {
+        \
+    }
+ ```

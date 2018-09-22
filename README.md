@@ -137,6 +137,34 @@ Notes:
 ```js
     const siblings = parent.children;
     for(let i = siblings.indexOf(element); i < siblings.length; i++) {
-        \
+        \\
     }
  ```
+
+而`generator`则是简单粗暴的将`expression`代码类似：
+
+If、Else、For之类的全部解析。
+
+代码框架是：
+
+```js
+export const generateAll = (element,parent,root) {
+    switch (element.type) {
+    case 'If':{
+        // Handle state, handle reference,
+        // Handel conditions
+        // Handle conditionsCode
+        // Handle PortionsCode 
+        
+        // Separator
+        // Do a big loop to handle that.
+        for (let i = siblings.indexOf(element);
+        i < sibling.length;
+        i++
+        ) {
+                // Something
+        }
+        }
+    }
+}
+```

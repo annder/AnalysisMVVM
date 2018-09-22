@@ -52,7 +52,9 @@ export const generateAll = (element, parent, root, reference) => {
           documentOperate.setElement(ifPortions, ifPortions + ']'),
         documentOperate.setElement(ifPortions, ifPortions + ']') +
           documentOperate.setElement(ifState,
-              documentOperate.directiveIf(ifState, ifConditions, parent.element)),
+              documentOperate.directiveIf(ifState,
+                  ifConditions,
+                  parent.element)),
         documentOperate.getElement(ifState) + `[2]()`,
       ];
     }
@@ -81,7 +83,7 @@ export const generateAll = (element, parent, root, reference) => {
               (i += 3)
         )) {
           forIdentifiers +=
-          separator + `\\` + forIdentifier.substring(7) + '\\';
+              separator + `\\` + forIdentifier.substring(7) + '\\';
           forIdentifier = '';
           separator = ',';
         } else {
@@ -91,12 +93,148 @@ export const generateAll = (element, parent, root, reference) => {
       forIdentifiers += ']';
       forValue += forIdentifier;
       return [
-        documentOperate.setElement(forReference, documentOperate.createComment)+
-        generateMount(forReference, parent.element, reference)+
-        documentOperate.setElement(forPortion, `function (locals){
-          ${generateAll}
-        };`),
+        documentOperate.setElement(forReference,
+            documentOperate.createComment) +
+          generateMount(forReference, parent.element, reference) +
+          documentOperate.setElement(forPortion, `function (locals){
+          ${generate({
+    element: root.nextElement,
+    nextElement: root.nextElement+1,
+    type: 'Root',
+    attributes: [],
+    children: element.children,
+  }, forReference)}  
+        };`) +
+          documentOperate.setElement(forPortions, '[];') +
+          documentOperate.setElement(forLocals, '[];'),
+        documentOperate.directiveFor(
+            forIdentifier,
+            forLocals,
+            forValue,
+            forPortion,
+            parent.element),
+        documentOperate.directiveFor(
+            forIdentifiers,
+            forLocals,
+            '[]',
+            forPortion,
+            forPortions,
+            parent.element),
       ];
+    }
+    case 'Text':
+    {
+      const textAttribute = element.attributes[0];
+      const textElement = root.nextElement;
+      const textCode = documentOperate.setTextContent(textElement,
+          documentOperate.attributeValue(textAttribute));
+      let createCode = documentOperate.setElement(
+          textElement,
+          documentOperate.createTextNode('\'\''));
+      let updateCode = '';
+      if (textAttribute.dynamic) {
+        updateCode += textCode;
+      } else {
+        createCode += textCode;
+      }
+      return [
+        createCode + generateMount(textElement, parent.element, reference),
+        updateCode,
+        documentOperate.removeChild(textElement, parent.element),
+      ];
+    }
+    default:
+    {
+      const attributes = element.attributes;
+      const children = element.children;
+      if (isComponentType(element.type)) {
+        element.component = root.nextElement++;
+        let createCode = documentOperate.setElement(element.component,
+            `new m.c.${element.type}()`);
+        let updateCode = '';
+        let dynamic = false;
+        for (let i = 0; i < attributes.length; i++) {
+          const attribute = attributes[i];
+          if (attribute.key[0] === '@') {
+            createCode += `${documentOperate.getElement(element.component)}
+            .on("${attribute.key.substring(1)}",function ($event) {
+              locals.$event=$event;
+              ${documentOperate.attributeValue(attribute)};
+            })`;
+          } else {
+            const attributeCode = `
+            ${documentOperate.getElement(element.component)}
+            .${attribute.key} =
+            ${attributeValue(attribute)}`;
+            if (attribute.dynamic) {
+              dynamic = true;
+              updateCode += attributeCode;
+            } else {
+              createCode += attributeCode;
+            }
+          }
+        }
+        createCode += `${documentOperate.getElement(element.component)}
+        .create(${documentOperate.getElement(parent.element)})`;
+        if (dynamic) {
+          updateCode +=
+              `${documentOperate.getElement(element.component)}.update();`;
+        } else {
+          createCode +=
+              `${documentOperate.getElement(element.component)}.update();`;
+        }
+        return [
+          createCode,
+          updateCode,
+          `${documentOperate.getElement(element.component)}.destroy()`,
+        ];
+      } else {
+        element.element = root.nextElement++;
+        let createCode = documentOperate.setElement(element.element,
+            documentOperate.createElement(element.type));
+        let updateCode = '';
+        for (let i = 0; i < attributes.length; i++) {
+          const attribute = attributes[i];
+          let attributeCode;
+          if (attribute.key[0] == '@') {
+            let eventType;
+            let eventHandler;
+            if (attribute.key === '@bind') {
+              const bindVariable = attributeValue(attribute);
+              attributeCode = `${documentOperate.getElement(element.element)}
+              .value=${bindVariable};`;
+              eventType = 'input';
+              eventHandler = `${bindVariable}=$event.target.value;
+              instance.update();`;
+            } else {
+              attributeCode = '';
+              eventType = attribute.key.substring(1);
+              eventHandler = `locals.$event=$event;
+              ${attributeValue(attribute)};`;
+            }
+            createCode +=
+            documentOperate.addEventListener(element.element, eventType,
+                `function($event){${eventHandler}}`);
+          } else {
+            attribute =
+            documentOperate.setAttributeValue(element.element, attribute);
+          }
+          if (attribute.dynamic) {
+            updateCode += attributeCode;
+          } else {
+            createCode += attributeCode;
+          }
+        }
+        for (let i = 0; i < children.length; i++) {
+          const childCode = generateAll(children[i], element, root, null);
+          createCode += childCode[0];
+          updateCode += childCode[1];
+        }
+        return [createCode +
+           generateMount(element.element, parent.element, reference),
+        updateCode,
+        documentOperate.removeChild(element.element, parent.element)];
+      }
     }
   }
 };
@@ -109,20 +247,20 @@ export const generate = (root, reference) => {
   let create = '';
   let update = '';
   let destroy = '';
-  for (let i = 0; i< children.length; i++) {
+  for (let i = 0; i < children.length; i++) {
     const generated = generateAll(children[i], root, reference);
-    create += generate[0];
-    update += generate[1];
-    destroy += generate[2];
+    create += generated[0];
+    update += generated[1];
+    destroy += generated[s2];
   }
-  let perlude = `var ${documentOperate.getElement(root, element)}`;
-  for (let i = root.element+1; i< root.nextElement; i++) {
-    perlude += `,${documentOperate.getElement(i)}`;
+  let prelude = `var ${documentOperate.getElement(root, element)}`;
+  for (let i = root.element + 1; i < root.nextElement; i++) {
+    prelude += `,${documentOperate.getElement(i)}`;
   }
-  return `${perlude};return [function (_0){
+  return `${prelude};return [function (_0){
     ${documentOperate.setElement(root.element, '_0;')}
     ${create},
-    function (){
+    function (){  
       ${update}
     },
     function (){

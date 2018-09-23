@@ -18,8 +18,8 @@ export const generateAll = (element, parent, root, reference) => {
       const ifReference = root.nextElement++;
       const ifConditions = root.nextElement++;
       const ifPortions = root.nextElement++;
-      let ifConditionsCode = '[';
-      let ifPortionsCode = '[';
+      const ifConditionsCode = '[';
+      const ifPortionsCode = '[';
       let separator = '';
       // Deal with tree begin!
       const siblings = parent.children;
@@ -29,10 +29,9 @@ export const generateAll = (element, parent, root, reference) => {
             sibling.type === 'ElseIf' ||
             sibling.type === 'Else') {
           ifConditionsCode += separator +
-              (sibling.type === 'Else' ?
-                'true' :
+              (sibling.type === 'Else' ? 'true' :
                 documentOperate.attributeValue(sibling.attributes[0]));
-          ifPortions += separator +
+          ifPortionsCode += separator +
               `function (locals) { ${generate({
                 element: root.nextElement,
                 nextElement: root.nextElement+1,
@@ -213,11 +212,11 @@ export const generateAll = (element, parent, root, reference) => {
               ${attributeValue(attribute)};`;
             }
             createCode +=
-            documentOperate.addEventListener(element.element, eventType,
-                `function($event){${eventHandler}}`);
+                documentOperate.addEventListener(element.element, eventType,
+                    `function($event){${eventHandler}}`);
           } else {
             attribute =
-            documentOperate.setAttributeValue(element.element, attribute);
+                documentOperate.setAttributeValue(element.element, attribute);
           }
           if (attribute.dynamic) {
             updateCode += attributeCode;
@@ -231,9 +230,10 @@ export const generateAll = (element, parent, root, reference) => {
           updateCode += childCode[1];
         }
         return [createCode +
-           generateMount(element.element, parent.element, reference),
+            generateMount(element.element, parent.element, reference),
         updateCode,
-        documentOperate.removeChild(element.element, parent.element)];
+        documentOperate.removeChild(element.element, parent.element),
+        ];
       }
     }
   }

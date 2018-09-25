@@ -169,4 +169,6 @@ export const generateAll = (element,parent,root) {
 }
 ```
 
+
+
 Complier: [Complier anonymous function](https://github.com/annder/AnalysisMVVM/blob/master/Complier.md)

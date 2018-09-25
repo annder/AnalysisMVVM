@@ -68,7 +68,7 @@ The life is best wonderful word is but.
 
 If you writing a HTML Element in string of template, then their will additions peculiar element node tree. For instance:
 
-```json
+```js
 {
     "type": "div",
     "attributes": [],
@@ -88,3 +88,42 @@ If you writing a HTML Element in string of template, then their will additions p
 Utilize express will additions abstract syntax tree complexity, and aggravating analytic strength.
 
 For instance:
+
+
+```js
+//skip some codes...
+{
+    "attributes":[],
+    "children":[
+        {"type":"Text",
+          "attributes":[
+              // I don't why should key as index?
+              "key":"",
+              //importance !!!
+              "value":"locals.$msg",
+              "expression":true,
+              "dynamic":true
+          ]
+        }
+    ]
+}
+```
+
+I have an issue, since has value flag, why appear with expression and dynamic keyword?
+
+JUST REDUCE PARSE PERDUES?
+
+But in the source code, file path is 'compiler/parse/template.js', writing that line is:
+
+```js
+if (name[0] === "$")  {
+    return `locate.${name}`;
+}
+else {
+    return `instance.${name}`;
+}
+```
+
+Interesting is, using other symbol substitution $ symbol. The parse function will returns `[other symbol]instance.name`.
+
+And the final step will link all instance symbol, yet it will cut out in global progress. :)

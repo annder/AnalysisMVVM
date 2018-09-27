@@ -126,4 +126,53 @@ else {
 
 Interesting is, using other symbol substitution $ symbol. The parse function will returns `[other symbol]instance.name`.
 
-And the final step will link all instance symbol, yet it will cut out in global progress. :)
+Next step is parse HTML element event system.
+
+The AST "key" keyword was done,the value is parsed function name.
+
+Instance:
+
+```js
+{
+    "key": "@click",
+    "value":"instance.update($event)"
+}
+```
+
+Other attributes is constant condition, that is immutable.
+
+Comparse Vuejs parse module, Vue.js utlizies HTML element (As template automic carraing conditions) be an abstract syntax tree.
+
+For instance:
+
+```js
+export function createASTElement(tag,attrs,parent) {
+  return {
+    type:1,
+    tag,
+    attrsList:attris,
+    attrsMap:makeAttriMap(attrs),
+    parent,
+    children:[]
+  }
+}
+```
+
+If has Directives, the Vue.js cope with thier as this:
+
+```js
+// addIfCondition function 
+
+const addIfCondition = (el,condition) => {
+if (!el.ifConditions) 
+  el.ifConditions = [];
+el.ifConditions.push(condition)
+}
+
+// isTextTag function 
+const isTextTag = (el) => {
+  return el.tag = 'script' || el.tag === 'style' 
+}
+```
+
+In summary, the Vue.js utilizes mount children object method, make gobel abstract symobl tree possession element condition.

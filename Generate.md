@@ -145,3 +145,12 @@ if should change state in template, then itself clean self.
 
 else render create a HTML element function.
 
+---
+
+Generate For directive:
+
+Well, we just parse Directive function that can helps comprehension Moon.
+
+```js
+
+```

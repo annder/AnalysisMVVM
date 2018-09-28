@@ -1,3 +1,5 @@
+
+
 const createElement = (type) => document.createElement(type);
 const createTextNode = (text) => document.createTextNode(text);
 const setAttribute = (element, key, value) => {
@@ -9,7 +11,7 @@ const addEventListener = (element, type, handler) => {
 const setTextContent = (element, content) => {
   element.textContent = content;
 };
-const appendChild = (element, parent) => {
+export const appendChild = (element, parent) => {
   parent.appendChild(element);
 };
 
@@ -61,12 +63,12 @@ const directiveFor = (forIdentifiers, forLocals,
 };
 
 export const m = {
-  directiveFor: directiveFor,
-  createElement: createElement,
-  createTextNode: createTextNode,
-  setAttribute: setAttribute,
-  addEventListener: addEventListener,
-  setTextContent: setTextContent,
-  appendChild: appendChild,
-  directiveIf: directiveIf,
+  df: directiveFor,
+  ce: createElement,
+  ctn: createTextNode,
+  sa: setAttribute,
+  ael: addEventListener,
+  stc: setTextContent,
+  ac: appendChild,
+  di: directiveIf,
 };

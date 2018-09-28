@@ -141,7 +141,7 @@ Instance:
 
 Other attributes is constant condition, that is immutable.
 
-Comparse Vuejs parse module, Vue.js utlizies HTML element (As template automic carraing conditions) be an abstract syntax tree.
+Compares Vuejs parse module, Vue.js utilizes HTML element (As template atomic carrying conditions) be an abstract syntax tree.
 
 For instance:
 
@@ -158,7 +158,7 @@ export function createASTElement(tag,attrs,parent) {
 }
 ```
 
-If has Directives, the Vue.js cope with thier as this:
+If has Directives, the Vue.js cope with their as this:
 
 ```js
 // addIfCondition function 
@@ -175,4 +175,4 @@ const isTextTag = (el) => {
 }
 ```
 
-In summary, the Vue.js utilizes mount children object method, make gobel abstract symobl tree possession element condition.
+In summary, the Vue.js utilizes mount children object method, make godel abstract symbol tree possession element condition.

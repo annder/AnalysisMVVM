@@ -12,8 +12,8 @@ export const createElement = (type) => `m.ce${type}`;
 export const createTextNode = (content) => `m.ctn(${content})`;
 export const createComment = (_) => `m.cc()`;
 export const attributeValue = (attribute) => attribute.expression ?
-    attribute.value :
-    `${attribute.value}`;
+  attribute.value :
+  `${attribute.value}`;
 export const setAttributeValue = (element, attribute) =>
   `m.sa(${getElement(element)},
   "${attribute.key}",

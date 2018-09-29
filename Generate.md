@@ -152,5 +152,46 @@ Generate For directive:
 Well, we just parse Directive function that can helps comprehension Moon.
 
 ```js
+const directiveFor = (forIdentifiers, forLocals, forValue, forPortion, forPortions, forParent) => {
+	const previousLength = forPortions.length;
+	const nextLength = forValue.length;
+	const maxLength = previousLength > nextLength ? previousLength : nextLength;
 
+	const keyIdentifier = forIdentifiers[1];
+	const valueIdentifier = forIdentifiers[0];
+
+	for (let i = 0; i < maxLength; i++) {
+		if (i >= previousLength) {
+			const forLocal = {};
+			forLocal[keyIdentifier] = i;
+			forLocal[valueIdentifier] = forValue[i];
+			forLocals[i] = forLocal;
+
+			const newForPortion = forPortion(forLocal);
+			forPortions.push(newForPortion);
+
+			newForPortion[0](forParent);
+			newForPortion[1]();
+		} else if (i >= nextLength) {
+			forPortions.pop()[2]();
+		} else {
+			const forLocal = forLocals[i];
+			forLocal[keyIdentifier] = i;
+			forLocal[valueIdentifier] = forValue[i];
+
+			forPortions[i][1]();
+		}
+	}
+};
 ```
+
+Observer that the function called 7 parameters, that is store array that calling parameters arrays in several new arrays. 
+
+And every arrays that stored calling parameter, will be render arrays that stored function reserver calling that.
+
+Well, stored function divide into 3 steps.
+
+1. Compassing with their calling in parameter that whether shallow equals.
+2. If else, rendering create truly DOM.
+3. If truly DOM presented the views, performance empty function.
+4. Or changed the DOM strut, and you will re-render function, or remove children's. 
